@@ -5,7 +5,7 @@ plugins {
 
 group = "io.github.jamestoney311"
 val artifactId = "org.eclipse.birt.report.engine.emitter.csv"
-version = "1.0.2"
+version = "1.0.3"
 
 repositories {
     mavenCentral()
@@ -15,11 +15,28 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    implementation("com.innoventsolutions.birt.runtime:org.eclipse.birt.runtime_4.8.0-20180626:4.8.0")
+    compileOnly("com.innoventsolutions.birt.runtime:org.eclipse.birt.runtime_4.8.0-20180626:4.8.0")
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.jar {
+    manifest {
+        attributes(
+            "Manifest-Version" to "1.0",
+            "Bundle-ManifestVersion" to "2",
+            "Bundle-Name" to "BIRT CSV Emitter",
+            "Bundle-SymbolicName" to "org.eclipse.birt.report.engine.emitter.csv;singleton:=true",
+            "Bundle-Version" to version.toString().replace("-", "."),
+            "Bundle-Activator" to "org.eclipse.birt.report.engine.emitter.csv.CsvPlugin",
+            "Bundle-ActivationPolicy" to "lazy",
+            "Bundle-RequiredExecutionEnvironment" to "JavaSE-1.6",
+            "Require-Bundle" to "org.eclipse.birt.core;bundle-version=\"3.7.0\",org.eclipse.birt.report.model;bundle-version=\"3.7.0\",org.eclipse.birt.report.engine;bundle-version=\"3.7.0\",org.eclipse.birt.data;bundle-version=\"3.7.0\"",
+            "Import-Package" to "org.osgi.framework;version=\"1.3.0\""
+        )
+    }
 }
 
 mavenPublishing {
