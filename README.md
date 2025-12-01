@@ -10,7 +10,7 @@ Adds CSV export capability to the BIRT report engine
 Configurable delimiters and CSV formatting behavior
 Integrates directly with BIRT’s emitter extension system
 Lightweight and dependency-free
-Licensed under the Eclipse Public License v1.0 (EPL-1.0)
+Licensed under the Eclipse Public License v2.0 (EPL-2.0)
 
 Installation
 
@@ -45,16 +45,18 @@ Contributing
 
 Contributions and issue reports are welcome. For major changes or new functionality, please open an issue first to discuss direction, compatibility with BIRT versions, and design considerations.
 
-License (EPL 1.0)
+License (EPL 2.0)
 
-This project is made available under the Eclipse Public License v1.0.
+This project is made available under the Eclipse Public License v2.0.
 
-You may obtain a copy of the license at: https://www.eclipse.org/legal/epl-v10.html
+You may obtain a copy of the license at: https://www.eclipse.org/legal/epl-2.0/
 
-EPL-1.0 Notice:
+EPL-2.0 Notice:
 
-All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution and is available at: https://www.eclipse.org/legal/epl-v10.html
+All rights reserved. This program and the accompanying materials are made available under the terms of the Eclipse Public License v2.0 which accompanies this distribution and is available at: https://www.eclipse.org/legal/epl-2.0/
 
 Origin and Attribution
 
 This project is based on the original Eclipse Labs CSV emitter plugin hosted on the Google Code platform. All original work remains under the Eclipse Public License v1.0.
+
+For more information, visit the original project page: https://code.google.com/archive/a/eclipselabs.org/p/csv-emitter-birt-plugin
