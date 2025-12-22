@@ -76,7 +76,9 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 	protected String delimiter = null;
 	
 	protected String replaceDelimiterInsideTextWith = null;
-	
+
+    protected Boolean isQuoteWrappingEnabled = false;
+
 	public CSVReportEmitter( )
 	{
 		contentVisitor = new ContentEmitterVisitor( this );
@@ -119,19 +121,19 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 		
 		this.replaceDelimiterInsideTextWith = (String)renderOption.getOption(ICSVRenderOption.REPLACE_DELIMITER_INSIDE_TEXT_WITH);
 		
-		// Setting Default Value Blank Space if user has not specified any value to replace the delimiter if it occurs inside text
-		if(replaceDelimiterInsideTextWith == null)
-		{
-			replaceDelimiterInsideTextWith = " ";
-		}
-		
+		this.isQuoteWrappingEnabled = (Boolean)renderOption.getOption(ICSVRenderOption.ENABLE_QUOTE_WRAPPING);
+        if(isQuoteWrappingEnabled == null)
+        {
+            isQuoteWrappingEnabled = false;
+        }
+
 		// checking csv render option if set to export data type in second row of the output
 		this.showDatatypeInSecondRow = (Boolean)renderOption.getOption(ICSVRenderOption.SHOW_DATATYPE_IN_SECOND_ROW);
 		
 		// Setting Default value to false if user has not specified aany value
 		if(showDatatypeInSecondRow == null)
 			showDatatypeInSecondRow = false;
-		
+
 		writer.open( out, "UTF-8" );
 		writer.startWriter( );
 	}
@@ -237,8 +239,8 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 		
 		if ( writeData )
 		{
-			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith );
-			currentColumn++;			
+			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled );
+			currentColumn++;
 		}
 	}
 	
@@ -261,7 +263,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 	{		
 		if ( writeData )
 			writer.closeTag( CSVTags.TAG_CR );
-		
+
 		writeData = true;
 	}	
 	
@@ -385,15 +387,15 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 				String dataType=resultSetMetaDatacolumnsWithDataType.get(columnNamesInTableOrder.get(i));
 				
 				if(dataType != null)
-					writer.text(dataType,delimiter, replaceDelimiterInsideTextWith);
-				
+					writer.text(dataType, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled);
+
 				if(i < columnNamesInTableOrder.size()-1)
 					writer.closeTag(delimiter);
 				else
 					writer.closeTag(CSVTags.TAG_CR);
 			}
-	
-		}		
+
+		}
 	}
 	
 }

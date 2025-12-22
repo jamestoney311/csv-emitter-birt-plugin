@@ -101,4 +101,22 @@ public class CSVRenderOption extends RenderOption implements ICSVRenderOption{
     {
         return getStringOption(REPLACE_DELIMITER_INSIDE_TEXT_WITH);
     }
+
+    /**
+     * Sets the text wrapper.
+     * @param enableQuoteWrapping true to wrap text values with quotes
+     */
+    public void setQuoteWrappingEnabled(boolean enableQuoteWrapping)
+    {
+        setOption(ENABLE_QUOTE_WRAPPING, enableQuoteWrapping);
+    }
+
+    /**
+     * Gets whether text is wrapped.
+     * @return true if wrapping is enabled
+     */
+    public boolean isQuoteWrappingEnabled()
+    {
+        return getBooleanOption(ENABLE_QUOTE_WRAPPING, false);
+    }
 }

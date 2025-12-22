@@ -38,6 +38,11 @@ public interface ICSVRenderOption extends IRenderOption{
     String REPLACE_DELIMITER_INSIDE_TEXT_WITH = "csvRenderOption.replaceDelimiterInsideTextWith";
 
     /**
+     * Flag to indicate whether text should be wrapped with quotes.
+     */
+    String ENABLE_QUOTE_WRAPPING = "csvRenderOption.isQuoteWrappingEnabled";
+
+    /**
      * Sets whether to show datatype in the second row.
      * @param showDatatypeInSecondRow true to show datatype in second row
      */
@@ -84,4 +89,16 @@ public interface ICSVRenderOption extends IRenderOption{
      * @return replacement string
      */
     String getReplaceDelimiterInsideTextWith ();
+
+    /**
+     * Enable or disable wrapping text values with quotes.
+     * @param isQuoteWrappingEnabled true to wrap text values
+     */
+    void setQuoteWrappingEnabled(boolean isQuoteWrappingEnabled);
+
+    /**
+     * Checks if wrapping text values with quotes is enabled.
+     * @return true if quote wrapping is enabled
+     */
+    boolean isQuoteWrappingEnabled();
 }

@@ -54,13 +54,28 @@ public class CSVWriter extends XMLWriter{
      * @param replaceDelimiterInsideTextWith replacement string for delimiter inside text
      */
     public void text(String textValue, String delimiter, String replaceDelimiterInsideTextWith) {
+        text(textValue, delimiter, replaceDelimiterInsideTextWith, false);
+    }
+
+    /**
+     * Writes text to the output, replacing delimiter inside cell data.
+     * @param textValue the text to write
+     * @param delimiter the delimiter string
+     * @param replaceDelimiterInsideTextWith replacement string for delimiter inside text
+     * @param isQuoteWrappingEnabled indicates if text should be wrapped
+     */
+    public void text(String textValue, String delimiter, String replaceDelimiterInsideTextWith, boolean isQuoteWrappingEnabled) {
         if ( textValue == null || textValue.isEmpty( ) )
-        {
             return;
+
+        if (replaceDelimiterInsideTextWith != null) {
+            textValue = textValue.replace(delimiter, replaceDelimiterInsideTextWith);
         }
-        // Replacing delimiter in Cell Data with user defined character for CSVWriter
-        textValue = textValue.replace(delimiter,replaceDelimiterInsideTextWith);
-        print( textValue );
+        if (isQuoteWrappingEnabled) {
+            print("\"" + textValue + "\"");
+        } else {
+            print(textValue);
+        }
     }
 
     /**
