@@ -13,5 +13,8 @@ public class CSVTags {
      * Carriage return tag (newline).
      */
     public static final String TAG_CR = "\n" ;
-
+    /**
+     * Tabulation delimiter tag.
+     */
+    public static final String TAG_TABULATION = "\t" ;
 }
