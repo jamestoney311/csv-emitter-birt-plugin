@@ -41,6 +41,8 @@ public interface ICSVRenderOption extends IRenderOption{
      * Flag to indicate whether text should be wrapped with quotes.
      */
     String ENABLE_QUOTE_WRAPPING = "csvRenderOption.isQuoteWrappingEnabled";
+    /** Debug logging flag for the CSV emitter. */
+    String DEBUG = "csvRenderOption.debug";
 
     /**
      * Sets whether to show datatype in the second row.
@@ -101,4 +103,15 @@ public interface ICSVRenderOption extends IRenderOption{
      * @return true if quote wrapping is enabled
      */
     boolean isQuoteWrappingEnabled();
+
+    /** Enable or disable debug logging. */
+    default void setDebug(boolean debug) {
+        setOption(DEBUG, debug);
+    }
+
+    /** Returns true if debug logging is enabled. */
+    default boolean isDebug() {
+        Object v = getOption(DEBUG);
+        return v instanceof Boolean ? (Boolean) v : false;
+    }
 }

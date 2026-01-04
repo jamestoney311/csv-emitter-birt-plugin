@@ -79,6 +79,8 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
     protected Boolean isQuoteWrappingEnabled = false;
 
+	protected Boolean debug = false;
+
 	public CSVReportEmitter( )
 	{
 		contentVisitor = new ContentEmitterVisitor( this );
@@ -125,6 +127,11 @@ public class CSVReportEmitter extends ContentEmitterAdapter
         if(isQuoteWrappingEnabled == null)
         {
             isQuoteWrappingEnabled = false;
+        }
+
+        this.debug = Boolean.TRUE.equals(renderOption.getOption(ICSVRenderOption.DEBUG));
+        if (debug) {
+            debug("CSVReportEmitter debug mode enabled.");
         }
 
 		// checking csv render option if set to export data type in second row of the output
@@ -230,13 +237,15 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 	{				
 		if ( isHidden(text.getStyle()) )
 		{
+			debug("skip text (hidden)");
 			logger.log( Level.FINE,"Skipping Hidden text" );
 			return;
 		}
 		
 		logger.log( Level.FINE,"Start text" );
 		String textValue = text.getText( );
-		
+
+        debug("start text - Value: '" + textValue + "', writeData: " + writeData + ", currentColumn: " + currentColumn + ", nestingLevel: " + tableNestingLevel);
 		if ( writeData )
 		{
 			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled );

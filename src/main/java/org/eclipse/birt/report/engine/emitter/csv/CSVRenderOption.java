@@ -119,4 +119,20 @@ public class CSVRenderOption extends RenderOption implements ICSVRenderOption{
     {
         return getBooleanOption(ENABLE_QUOTE_WRAPPING, false);
     }
+
+    /**
+     * Enable or disable debug logging for the CSV emitter.
+     */
+    public void setDebug(boolean debug)
+    {
+        setOption(DEBUG, debug);
+    }
+
+    /**
+     * Checks if debug logging is enabled.
+     */
+    public boolean isDebug()
+    {
+        return getBooleanOption(DEBUG, false);
+    }
 }
