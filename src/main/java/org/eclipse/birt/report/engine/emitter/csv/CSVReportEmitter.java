@@ -499,10 +499,12 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 			{
 				return; //not a row handle, nothing to do
 			}
-			
-			@SuppressWarnings("unchecked")
-			ArrayList<CellHandle> cells= (ArrayList<CellHandle>)rowHandle.getCells().getContents();
-			
+
+			ArrayList<CellHandle> cells= new ArrayList<>();
+            for (Object item : rowHandle.getCells().getContents()) {
+                cells.add((CellHandle) item);
+            }
+
 			for(CellHandle cellHandle:cells)
 			{				
 				Cell cell=(Cell)cellHandle.getElement();			

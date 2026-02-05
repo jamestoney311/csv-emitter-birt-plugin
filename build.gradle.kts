@@ -5,7 +5,7 @@ plugins {
 
 group = "io.github.jamestoney311"
 val artifactId = "org.eclipse.birt.report.engine.emitter.csv"
-version = "1.0.6"
+version = "1.0.7"
 
 repositories {
     mavenCentral()
@@ -15,7 +15,9 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    compileOnly("com.innoventsolutions.birt.runtime:org.eclipse.birt.runtime_4.8.0-20180626:4.8.0")
+    compileOnly("org.eclipse.birt:org.eclipse.birt.report.engine:4.20.0")
+    compileOnly("org.eclipse.birt:org.eclipse.birt.core.script.function:4.20.0")
+    compileOnly("org.eclipse.birt:org.eclipse.birt.report.engine.script.javascript:4.20.0")
 }
 
 tasks.test {
@@ -74,7 +76,9 @@ mavenPublishing {
             developerConnection.set("scm:git:ssh://github.com:jamestoney311/csv-emitter-birt-plugin.git")
         }
         dependencies {
-            implementation("com.innoventsolutions.birt.runtime:org.eclipse.birt.runtime_4.8.0-20180626:4.8.0")
+            implementation("org.eclipse.birt:org.eclipse.birt.report.engine:4.20.0")
+            implementation("org.eclipse.birt:org.eclipse.birt.core.script.function:4.20.0")
+            implementation("org.eclipse.birt:org.eclipse.birt.report.engine.script.javascript:4.20.0")
         }
     }
 }
