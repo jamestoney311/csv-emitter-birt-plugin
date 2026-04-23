@@ -121,6 +121,24 @@ public class CSVRenderOption extends RenderOption implements ICSVRenderOption{
     }
 
     /**
+     * Sets the fixed width.
+     * @param isFixedWidth true to enable fixed width
+     */
+    public void setFixedWidth(boolean isFixedWidth)
+    {
+        setOption(ENABLE_FIXED_WIDTH, isFixedWidth);
+    }
+
+    /**
+     * Gets whether fixed width is enabled
+     * @return true to enable fixed width
+     */
+    public boolean isFixedWidth()
+    {
+        return getBooleanOption(ENABLE_FIXED_WIDTH, false);
+    }
+
+    /**
      * Enable or disable debug logging for the CSV emitter.
      */
     public void setDebug(boolean debug)

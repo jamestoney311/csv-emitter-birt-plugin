@@ -5,9 +5,10 @@ plugins {
 
 group = "io.github.jamestoney311"
 val artifactId = "org.eclipse.birt.report.engine.emitter.csv"
-version = "1.0.7"
+version = "1.0.8"
 
 repositories {
+    gradlePluginPortal()
     mavenCentral()
 }
 

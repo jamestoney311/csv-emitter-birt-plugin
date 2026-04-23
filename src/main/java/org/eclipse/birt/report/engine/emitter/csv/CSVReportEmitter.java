@@ -70,6 +70,8 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
     protected Boolean isQuoteWrappingEnabled = false;
 
+    protected Boolean isFixedWidth = false;
+
 	protected Boolean debug = false;
 
 	protected int tableNestingLevel = 0;
@@ -133,6 +135,12 @@ public class CSVReportEmitter extends ContentEmitterAdapter
         if(isQuoteWrappingEnabled == null)
         {
             isQuoteWrappingEnabled = false;
+        }
+
+        this.isFixedWidth = (Boolean)renderOption.getOption(ICSVRenderOption.ENABLE_FIXED_WIDTH);
+        if(isFixedWidth == null)
+        {
+            isFixedWidth = false;
         }
 
         this.debug = Boolean.TRUE.equals(renderOption.getOption(ICSVRenderOption.DEBUG));
@@ -298,7 +306,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
         debug("start text - Value: '" + textValue + "', writeData: " + writeData + ", currentColumn: " + currentColumn + ", nestingLevel: " + tableNestingLevel);
 		if ( writeData )
 		{
-			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled );
+			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth);
 			cellHasContent = true;
 		}
 	}
@@ -320,7 +328,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
 		if ( writeData )
 		{
-			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled );
+			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth );
 			cellHasContent = true;
 		}
 	}
@@ -341,7 +349,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
         debug("start foreign - Value: '" + textValue + "', writeData: " + writeData + ", currentColumn: " + currentColumn + ", nestingLevel: " + tableNestingLevel);
 		if ( writeData )
 		{
-			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled );
+			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth );
 			cellHasContent = true;
 		}
 	}
@@ -361,7 +369,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
         debug("start autotext - L" + tableNestingLevel + " val:'" + textValue + "'");
 		if ( writeData )
 		{
-			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled );
+			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth );
 			cellHasContent = true;
 		}
 	}
@@ -547,7 +555,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 				String dataType=resultSetMetaDatacolumnsWithDataType.get(columnNamesInTableOrder.get(i));
 				
 				if(dataType != null)
-					writer.text(dataType, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled);
+					writer.text(dataType, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth);
 
 				if(i < columnNamesInTableOrder.size()-1)
 					writer.closeTag(delimiter);

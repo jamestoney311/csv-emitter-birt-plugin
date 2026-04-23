@@ -56,38 +56,7 @@ public class CSVWriter extends XMLWriter {
      * @param replaceDelimiterInsideTextWith replacement string for delimiter inside text
      */
     public void text(String textValue, String delimiter, String replaceDelimiterInsideTextWith) {
-        text(textValue, delimiter, replaceDelimiterInsideTextWith, false);
-    }
-
-    /**
-     * Clean the data from new lines and multiple whitespaces.
-     *
-     * @param textValue                      the text to remove inner whitespaces
-     * @return cleaned text
-     */
-    public String removeInnerWhiteSpaces(String textValue){
-        textValue = textValue.replace("\r\n", " ").replace("\n", " ").replace("\r", " ");
-
-        int leadingSpaces = 0;
-        int trailingSpaces = 0;
-
-        while (leadingSpaces < textValue.length() && textValue.charAt(leadingSpaces) == ' ') {
-            leadingSpaces++;
-        }
-
-        while (trailingSpaces < textValue.length() &&
-                textValue.charAt(textValue.length() - 1 - trailingSpaces) == ' ') {
-            trailingSpaces++;
-        }
-
-        if (leadingSpaces + trailingSpaces < textValue.length()) {
-            String middle = textValue.substring(leadingSpaces, textValue.length() - trailingSpaces);
-            middle = middle.replaceAll("\\s+", " ");
-
-            textValue = textValue.substring(0, leadingSpaces) + middle + textValue.substring(textValue.length() - trailingSpaces);
-        }
-
-        return textValue;
+        text(textValue, delimiter, replaceDelimiterInsideTextWith, false, false);
     }
 
     /**
@@ -98,7 +67,7 @@ public class CSVWriter extends XMLWriter {
      * @param replaceDelimiterInsideTextWith replacement string for delimiter inside text
      * @param isQuoteWrappingEnabled         indicates if text should be wrapped
      */
-    public void text(String textValue, String delimiter, String replaceDelimiterInsideTextWith, boolean isQuoteWrappingEnabled) {
+    public void text(String textValue, String delimiter, String replaceDelimiterInsideTextWith, boolean isQuoteWrappingEnabled, boolean isFixedWidth) {
         if (textValue == null || textValue.isEmpty()) {
             if(isQuoteWrappingEnabled){
                 print("\"\"");
@@ -106,7 +75,9 @@ public class CSVWriter extends XMLWriter {
             return;
         }
 
-        textValue = removeInnerWhiteSpaces(textValue);
+        if (!isFixedWidth) {
+            textValue = trim(textValue);
+        }
 
         boolean containsDelimiter = textValue.contains(delimiter);
         boolean isAlreadyQuoted = textValue.startsWith("\"") && textValue.endsWith("\"") && textValue.length() >= 2;
@@ -120,6 +91,43 @@ public class CSVWriter extends XMLWriter {
                 textValue = textValue.replace(delimiter, replaceDelimiterInsideTextWith);
             }
             print(textValue);
+        }
+    }
+
+    /**
+     * Clean the data from new lines and multiple whitespaces.
+     *
+     * @param textValue                      the text to remove inner whitespaces
+     * @return cleaned text
+     */
+    public String trim(String textValue){
+        if(textValue.trim().isEmpty()){
+            return "";
+        }
+
+        if(!isNumber(textValue)) {
+            return textValue;
+        }
+
+        textValue = textValue.replace("\r\n", " ").replace("\n", " ").replace("\r", " ");
+
+        textValue = textValue.replaceAll("\\s+$", "").replaceAll("^\\s+", " ");
+
+        return textValue;
+    }
+
+    /**
+     * Check if textValue is a number.
+     *
+     * @param textValue                      the text to check if parsable to number format
+     * @return true if textValue is a number.
+     */
+    public boolean isNumber(String textValue) {
+        try {
+            Double.parseDouble(textValue);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
         }
     }
 

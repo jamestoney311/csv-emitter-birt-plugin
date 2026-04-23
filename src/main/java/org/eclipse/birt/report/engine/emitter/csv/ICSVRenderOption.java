@@ -41,6 +41,12 @@ public interface ICSVRenderOption extends IRenderOption{
      * Flag to indicate whether text should be wrapped with quotes.
      */
     String ENABLE_QUOTE_WRAPPING = "csvRenderOption.isQuoteWrappingEnabled";
+
+    /**
+     * Flag to indicate whether text whitespaces should be trimmed.
+     */
+    String ENABLE_FIXED_WIDTH = "csvRenderOption.isFixedWidth";
+
     /** Debug logging flag for the CSV emitter. */
     String DEBUG = "csvRenderOption.debug";
 
@@ -103,6 +109,18 @@ public interface ICSVRenderOption extends IRenderOption{
      * @return true if quote wrapping is enabled
      */
     boolean isQuoteWrappingEnabled();
+
+    /**
+     * Checks if wrapping whitespace values is trimmed.
+     * @param isFixedWidth if whitespace trimming is enabled
+     */
+    void setFixedWidth(boolean isFixedWidth);
+
+    /**
+     * Checks if wrapping whitespace values is trimmed.
+     * @return true if whitespace trimming is enabled
+     */
+    boolean isFixedWidth();
 
     /** Enable or disable debug logging. */
     default void setDebug(boolean debug) {
