@@ -74,17 +74,19 @@ public class CSVWriter extends XMLWriter {
             }
             return;
         }
+        textValue = textValue.replace("\r\n", " ").replace("\n", " ").replace("\r", " ");
 
         if (!isFixedWidth) {
             textValue = trim(textValue);
         }
 
+        if (textValue.startsWith("\"") && textValue.endsWith("\"")) {
+            textValue = textValue.substring(1, textValue.length() - 1);
+        }
+
         boolean containsDelimiter = textValue.contains(delimiter);
-        boolean isAlreadyQuoted = textValue.startsWith("\"") && textValue.endsWith("\"") && textValue.length() >= 2;
         boolean needsQuoting = isQuoteWrappingEnabled || containsDelimiter;
-        if (isAlreadyQuoted) {
-            print(textValue);
-        } else if (needsQuoting) {
+        if (needsQuoting) {
             print("\"" + textValue + "\"");
         } else {
             if (replaceDelimiterInsideTextWith != null) {
@@ -106,14 +108,10 @@ public class CSVWriter extends XMLWriter {
         }
 
         if(!isNumber(textValue)) {
-            return textValue;
+            return textValue.trim();
+        } else {
+            return textValue.replaceAll("\\s+$", "").replaceAll("^\\s+", " ");
         }
-
-        textValue = textValue.replace("\r\n", " ").replace("\n", " ").replace("\r", " ");
-
-        textValue = textValue.replaceAll("\\s+$", "").replaceAll("^\\s+", " ");
-
-        return textValue;
     }
 
     /**
