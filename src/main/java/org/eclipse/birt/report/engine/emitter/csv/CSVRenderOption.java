@@ -122,20 +122,20 @@ public class CSVRenderOption extends RenderOption implements ICSVRenderOption{
 
     /**
      * Sets the fixed width.
-     * @param isFixedWidth true to enable fixed width
+     * @param isFixedWidthReport true to enable fixed width
      */
-    public void setFixedWidth(boolean isFixedWidth)
+    public void setFixedWidthReport(boolean isFixedWidthReport)
     {
-        setOption(ENABLE_FIXED_WIDTH, isFixedWidth);
+        setOption(ENABLE_FIXED_WIDTH_REPORT, isFixedWidthReport);
     }
 
     /**
      * Gets whether fixed width is enabled
      * @return true to enable fixed width
      */
-    public boolean isFixedWidth()
+    public boolean isFixedWidthReport()
     {
-        return getBooleanOption(ENABLE_FIXED_WIDTH, false);
+        return getBooleanOption(ENABLE_FIXED_WIDTH_REPORT, false);
     }
 
     /**

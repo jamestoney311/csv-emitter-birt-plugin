@@ -67,7 +67,7 @@ public class CSVWriter extends XMLWriter {
      * @param replaceDelimiterInsideTextWith replacement string for delimiter inside text
      * @param isQuoteWrappingEnabled         indicates if text should be wrapped
      */
-    public void text(String textValue, String delimiter, String replaceDelimiterInsideTextWith, boolean isQuoteWrappingEnabled, boolean isFixedWidth) {
+    public void text(String textValue, String delimiter, String replaceDelimiterInsideTextWith, boolean isQuoteWrappingEnabled, boolean isFixedWidthReport) {
         if (textValue == null || textValue.isEmpty()) {
             if(isQuoteWrappingEnabled){
                 print("\"\"");
@@ -76,11 +76,12 @@ public class CSVWriter extends XMLWriter {
         }
         textValue = textValue.replace("\r\n", " ").replace("\n", " ").replace("\r", " ");
 
-        if (!isFixedWidth) {
+        boolean isAlreadyWrappedInQuotes = textValue.startsWith("\"") && textValue.endsWith("\"");
+        if (!isFixedWidthReport && !isAlreadyWrappedInQuotes) {
             textValue = trim(textValue);
         }
 
-        if (textValue.startsWith("\"") && textValue.endsWith("\"")) {
+        if (isAlreadyWrappedInQuotes) {
             textValue = textValue.substring(1, textValue.length() - 1);
         }
 
@@ -108,9 +109,9 @@ public class CSVWriter extends XMLWriter {
         }
 
         if(!isNumber(textValue)) {
-            return textValue.trim();
+            return textValue.trim().replaceAll("\\s+", " ");
         } else {
-            return textValue.replaceAll("\\s+$", "").replaceAll("^\\s+", " ");
+            return textValue.replaceAll("^\\s+", " ").replaceAll("\\s+$", "");
         }
     }
 

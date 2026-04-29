@@ -70,7 +70,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
     protected Boolean isQuoteWrappingEnabled = false;
 
-    protected Boolean isFixedWidth = false;
+    protected Boolean isFixedWidthReport = false;
 
 	protected Boolean debug = false;
 
@@ -137,10 +137,10 @@ public class CSVReportEmitter extends ContentEmitterAdapter
             isQuoteWrappingEnabled = false;
         }
 
-        this.isFixedWidth = (Boolean)renderOption.getOption(ICSVRenderOption.ENABLE_FIXED_WIDTH);
-        if(isFixedWidth == null)
+        this.isFixedWidthReport = (Boolean)renderOption.getOption(ICSVRenderOption.ENABLE_FIXED_WIDTH_REPORT);
+        if(isFixedWidthReport == null)
         {
-            isFixedWidth = false;
+            isFixedWidthReport = false;
         }
 
         this.debug = Boolean.TRUE.equals(renderOption.getOption(ICSVRenderOption.DEBUG));
@@ -306,7 +306,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
         debug("start text - Value: '" + textValue + "', writeData: " + writeData + ", currentColumn: " + currentColumn + ", nestingLevel: " + tableNestingLevel);
 		if ( writeData )
 		{
-			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth);
+			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidthReport);
 			cellHasContent = true;
 		}
 	}
@@ -328,7 +328,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
 		if ( writeData )
 		{
-			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth );
+			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidthReport );
 			cellHasContent = true;
 		}
 	}
@@ -349,7 +349,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
         debug("start foreign - Value: '" + textValue + "', writeData: " + writeData + ", currentColumn: " + currentColumn + ", nestingLevel: " + tableNestingLevel);
 		if ( writeData )
 		{
-			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth );
+			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidthReport );
 			cellHasContent = true;
 		}
 	}
@@ -369,7 +369,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
         debug("start autotext - L" + tableNestingLevel + " val:'" + textValue + "'");
 		if ( writeData )
 		{
-			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth );
+			writer.text( textValue, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidthReport );
 			cellHasContent = true;
 		}
 	}
@@ -555,7 +555,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 				String dataType=resultSetMetaDatacolumnsWithDataType.get(columnNamesInTableOrder.get(i));
 				
 				if(dataType != null)
-					writer.text(dataType, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidth);
+					writer.text(dataType, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidthReport);
 
 				if(i < columnNamesInTableOrder.size()-1)
 					writer.closeTag(delimiter);

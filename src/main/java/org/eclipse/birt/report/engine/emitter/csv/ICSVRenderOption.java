@@ -45,7 +45,7 @@ public interface ICSVRenderOption extends IRenderOption{
     /**
      * Flag to indicate whether text whitespaces should be trimmed.
      */
-    String ENABLE_FIXED_WIDTH = "csvRenderOption.isFixedWidth";
+    String ENABLE_FIXED_WIDTH_REPORT = "csvRenderOption.isFixedWidthReportReport";
 
     /** Debug logging flag for the CSV emitter. */
     String DEBUG = "csvRenderOption.debug";
@@ -112,15 +112,15 @@ public interface ICSVRenderOption extends IRenderOption{
 
     /**
      * Checks if wrapping whitespace values is trimmed.
-     * @param isFixedWidth if whitespace trimming is enabled
+     * @param isFixedWidthReport if whitespace trimming is enabled
      */
-    void setFixedWidth(boolean isFixedWidth);
+    void setFixedWidthReport(boolean isFixedWidthReport);
 
     /**
      * Checks if wrapping whitespace values is trimmed.
      * @return true if whitespace trimming is enabled
      */
-    boolean isFixedWidth();
+    boolean isFixedWidthReport();
 
     /** Enable or disable debug logging. */
     default void setDebug(boolean debug) {
