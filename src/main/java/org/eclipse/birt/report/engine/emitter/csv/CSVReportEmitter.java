@@ -29,43 +29,43 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class CSVReportEmitter extends ContentEmitterAdapter
-{		
+{
 	protected static Logger logger = Logger.getLogger( CSVReportEmitter.class.getName( ) );
-	
+
 	protected static final String OUTPUT_FORMAT_CSV = "csv";
 
 	protected static final String REPORT_FILE = "report.csv";
-	
+
 	protected ContentEmitterVisitor contentVisitor;
-	
+
 	protected IEmitterServices services;
-	
-	protected CSVWriter writer; 
-	
+
+	protected CSVWriter writer;
+
 	protected IReportContent report;
-	
+
 	protected IRenderOption renderOption;
-	
+
 	protected int totalColumns;
-	
+
 	protected int currentColumn;
-	
-	protected OutputStream out = null;	
-	
-	protected boolean isFirstPage = false;	
-	
+
+	protected OutputStream out = null;
+
+	protected boolean isFirstPage = false;
+
 	protected long firstTableID = -1;
-	
+
 	protected boolean writeData = true;
-	
+
 	protected Boolean showDatatypeInSecondRow = false;
-	
+
 	protected String tableToOutput;
-	
+
 	protected boolean outputCurrentTable;
-	
+
 	protected String delimiter = null;
-	
+
 	protected String replaceDelimiterInsideTextWith = null;
 
     protected Boolean isQuoteWrappingEnabled = false;
@@ -82,6 +82,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
 	protected int nestedCurrentColumn = 0;
 
+
 	public CSVReportEmitter( )
 	{
 		contentVisitor = new ContentEmitterVisitor( this );
@@ -93,44 +94,44 @@ public class CSVReportEmitter extends ContentEmitterAdapter
         }
         System.out.println("[CSVEmitter] " + message);
     }
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.birt.report.engine.emitter.ContentEmitterAdapter#initialize(org.eclipse.birt.report.engine.emitter.IEmitterServices)
 	 */
 	public void initialize( IEmitterServices services ) throws EngineException
 	{
-		this.services = services;		
-		this.out = EmitterUtil.getOuputStream( services, REPORT_FILE );			
-		
-		writer = new CSVWriter( );	
+		this.services = services;
+		this.out = EmitterUtil.getOuputStream( services, REPORT_FILE );
+
+		writer = new CSVWriter( );
 	}
-	
+
 	public void start( IReportContent report )
 	{
 		logger.log( Level.FINE,"Starting CSVReportEmitter." );
-		
+
 		this.report = report;
-		
+
 		this.renderOption = report.getReportContext().getRenderOption();
-		
-		this.tableToOutput= (String)renderOption.getOption(ICSVRenderOption.EXPORT_TABLE_BY_NAME);		
-		
+
+		this.tableToOutput= (String)renderOption.getOption(ICSVRenderOption.EXPORT_TABLE_BY_NAME);
+
 		// Setting tableToOutput to Default as user has not set any Render Option to Output a specific Table
 		if(tableToOutput == null)
 		{
 			this.tableToOutput="Default";
 		}
-		
+
 		this.delimiter = (String)renderOption.getOption(ICSVRenderOption.DELIMITER);
-		
+
 		// Setting Default Field Delimiter if user has not specified any Delimiter
 		if(delimiter == null)
 		{
 			delimiter = CSVTags.TAG_COMMA;
 		}
-		
+
 		this.replaceDelimiterInsideTextWith = (String)renderOption.getOption(ICSVRenderOption.REPLACE_DELIMITER_INSIDE_TEXT_WITH);
-		
+
 		this.isQuoteWrappingEnabled = (Boolean)renderOption.getOption(ICSVRenderOption.ENABLE_QUOTE_WRAPPING);
         if(isQuoteWrappingEnabled == null)
         {
@@ -150,7 +151,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
 		// checking csv render option if set to export data type in second row of the output
 		this.showDatatypeInSecondRow = (Boolean)renderOption.getOption(ICSVRenderOption.SHOW_DATATYPE_IN_SECOND_ROW);
-		
+
 		// Setting Default value to false if user has not specified aany value
 		if(showDatatypeInSecondRow == null)
 			showDatatypeInSecondRow = false;
@@ -158,14 +159,14 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 		writer.open( out, "UTF-8" );
 		writer.startWriter( );
 	}
-	
+
 	public void end( IReportContent report )
 	{
 		logger.log( Level.FINE,"CSVReportEmitter end report." );
-		
+
 		writer.endWriter( );
 		writer.close( );
-		
+
 		// Informing user if Table Name provided in Render Option is not found and Blank Report is getting generated
 		if(tableToOutput != "Default" && report.getDesign().getReportDesign().findElement(tableToOutput) == null)
 		{
@@ -184,20 +185,20 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 			}
 		}
 	}
-	
+
 	public void startPage( IPageContent page ) throws BirtException
 	{
 		logger.log( Level.FINE,"CSVReportEmitter startPage" );
-		
+
 		startContainer( page );
-		
+
 		if(page.getPageNumber()>1){
 			isFirstPage = false;
 		}else{
-			isFirstPage = true;			
-		}		
+			isFirstPage = true;
+		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.eclipse.birt.report.engine.emitter.ContentEmitterAdapter#startLabel(org.eclipse.birt.report.engine.content.ILabelContent)
 	 * To avoid framework to print label for every page.
@@ -208,7 +209,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
             debug("Label: " + label.getLabelText());
         }
 	}
-	
+
 	public void startTable( ITableContent table )
 	{
 		assert table != null;
@@ -230,12 +231,12 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 		}
 
 		if(firstTableID == -1)
-			firstTableID = table.getInstanceID().getComponentID();		
-		
+			firstTableID = table.getInstanceID().getComponentID();
+
 		String currentTableName = table.getName();
 
         debug("Active table: " + currentTableName);
-		
+
 		// Only process table selection logic for the first level table
 		// Nested tables inherit the parent's outputCurrentTable state
 		if (tableNestingLevel == 1) {
@@ -265,12 +266,12 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 	public void startRow( IRowContent row )
 	{
 		assert row != null;
-		
+
 		debug("startRow - Nesting level: " + tableNestingLevel + ", RowID: " + row.getRowID());
 
 		// Only skip footer/header rows for top-level table (nesting level 1)
 		if (tableNestingLevel == 1) {
-			if ( isRowInFooter( row ) || isRowInHeaderExceptFirstHeader(row) || outputCurrentTable!=true)
+			if (isRowInHeaderExceptFirstHeader(row) || outputCurrentTable!=true)
 				writeData = false;
 		}
 		// For nested tables (level > 1), output ALL rows including headers and footers
@@ -278,9 +279,9 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
         // rowID will be 1 for the first data row, before printing the data row we need to print the datatype
 		// printDatatypeInSecondRow will be called only once
-		if ( showDatatypeInSecondRow && row.getRowID()==1)			
-			printDatatypeInSecondRow(row);				
-		
+		if ( showDatatypeInSecondRow && row.getRowID()==1)
+			printDatatypeInSecondRow(row);
+
 		// Only reset currentColumn for top-level table rows
 		// Nested table rows should continue with the parent's column position
 		if (tableNestingLevel == 1) {
@@ -290,16 +291,16 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 			nestedCurrentColumn = 0;
 		}
 	}
-	
+
 	public void startText( ITextContent text )
-	{				
+	{
 		if ( isHidden(text.getStyle()) )
 		{
 			debug("skip text (hidden)");
 			logger.log( Level.FINE,"Skipping Hidden text" );
 			return;
 		}
-		
+
 		logger.log( Level.FINE,"Start text" );
 		String textValue = text.getText( );
 
@@ -377,7 +378,6 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 	public void startCell( ICellContent cell )
 	{
 		cellHasContent = false; // Reset for each cell
-		debug("startCell - Column: " + currentColumn + ", writeData: " + writeData + ", colSpan: " + cell.getColSpan() + ", nestingLevel: " + tableNestingLevel);
 
 		if ( isHidden(cell.getStyle()) )
 		{
@@ -385,6 +385,13 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 			logger.log( Level.FINE,"Skipping Hidden cell" );
 			return;
 		}
+
+		boolean isTopLevel = tableNestingLevel == 1;
+		int col = isTopLevel ? currentColumn : nestedCurrentColumn;
+		debug("startCell - Column: " + col + ", writeData: " + writeData + ", colSpan: " + cell.getColSpan() + ", nestingLevel: " + tableNestingLevel);
+
+		if ( writeData && col > 0 )
+			writer.closeTag( delimiter );
 	}
 
 	public void endCell( ICellContent cell )
@@ -395,34 +402,13 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 			return;
 		}
 
-		debug("endCell - Nesting level: " + tableNestingLevel + ", currentColumn: " + currentColumn + ", totalColumns: " + totalColumns + ", nestedCurrentColumn: " + nestedCurrentColumn + ", nestedTableColumns: " + nestedTableColumns);
+		boolean isTopLevel = tableNestingLevel == 1;
+		if (isTopLevel) currentColumn++;
+		else nestedCurrentColumn++;
 
-		// For top-level table, increment column counter
-		if (tableNestingLevel == 1) {
-			currentColumn++;
-			debug("Top-level: after increment currentColumn=" + currentColumn);
-			if ( writeData && currentColumn < totalColumns )
-			{
-				writer.closeTag( delimiter );
-				debug("\t-> insert delimiter");
-			} else {
-                debug("\t-> no delimiter");
-            }
-		} else {
-			// Nested table cell - increment nested column counter
-			nestedCurrentColumn++;
-			debug("endCell - L" + tableNestingLevel + " nestCol:" + nestedCurrentColumn + "/" + nestedTableColumns);
-
-			if ( writeData && nestedCurrentColumn < nestedTableColumns )
-			{
-				writer.closeTag( delimiter );
-				debug("\t-> insert delimiter (nested)");
-			} else {
-                debug("\t-> no delimiter (nested)");
-            }
-		}
+		debug("endCell - L" + tableNestingLevel + " col:" + (isTopLevel ? currentColumn : nestedCurrentColumn));
 	}
-	
+
 	public void endRow( IRowContent row )
 	{
 		debug("endRow - L" + tableNestingLevel);
@@ -431,12 +417,12 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 			writer.closeTag( CSVTags.TAG_CR );
 
 		writeData = true;
-	}	
-	
+	}
+
 	private boolean isHidden(IStyle style)
-	{		
+	{
 		String format=style.getVisibleFormat();
-		
+
 		if ( format != null && ( format.indexOf( EngineIRConstants.FORMAT_TYPE_VIEWER ) >= 0 || format.indexOf( BIRTConstants.BIRT_ALL_VALUE ) >= 0 ) )
 		{
 			return true;
@@ -444,61 +430,45 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 		else
 		{
 			return false;
-		}		
-	}
-	
-	private boolean isRowInFooter( IRowContent row )
-	{
-		IElement parent = row.getParent( );
-		if ( !( parent instanceof IBandContent ) )
-		{
-			return false;
 		}
-		
-		IBandContent band = ( IBandContent )parent;
-		if ( band.getBandType( ) == IBandContent.BAND_FOOTER )
-		{
-			return true;
-		}
-		return false;
 	}
-	
+
 	private boolean isRowInHeaderExceptFirstHeader( IRowContent row )
 	{
 		if(isFirstPage)
 			return false;
-		
+
 		IElement parent = row.getParent( );
 		if ( !( parent instanceof IBandContent ) )
 		{
 			return false;
 		}
-		
+
 		IBandContent band = ( IBandContent )parent;
 		if ( band.getBandType( ) == IBandContent.BAND_HEADER )
 		{
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	private void printDatatypeInSecondRow(IRowContent row)
-	{		
+	{
 		if(writeData)
-		{			
+		{
 			// ArrayList of columns used in Table in the same order as they appear in Report Design
 			ArrayList<String> columnNamesInTableOrder = new ArrayList<String> ();
-			
+
 			// HashMap to contain ResultSetMetaData column and its respective DataType
 			HashMap<String,String> resultSetMetaDatacolumnsWithDataType = new HashMap<String, String>();
-			
+
 			ReportDesignHandle reportDesignHandle=report.getDesign().getReportDesign();
-			
+
 			Object obj=reportDesignHandle.getElementByID(row.getInstanceID().getComponentID());
-			
+
 			RowHandle rowHandle=null;
-			
+
 			if(obj instanceof RowHandle)
 			{
 				rowHandle=(RowHandle)obj;
@@ -514,28 +484,28 @@ public class CSVReportEmitter extends ContentEmitterAdapter
             }
 
 			for(CellHandle cellHandle:cells)
-			{				
-				Cell cell=(Cell)cellHandle.getElement();			
-				
+			{
+				Cell cell=(Cell)cellHandle.getElement();
+
 				@SuppressWarnings("rawtypes")
 				ArrayList cellContents=(ArrayList)cell.getSlot(0).getContents();
-				
+
 				// Currently hard coded to get the first content only
-				
+
 				if(cellContents.get(0) instanceof DataItem)
 				{
-					DataItem cellDataItem=(DataItem)cellContents.get(0);									
+					DataItem cellDataItem=(DataItem)cellContents.get(0);
 					columnNamesInTableOrder.add((String)cellDataItem.getLocalProperty(report.getDesign()
-							.getReportDesign().getModule(), IDataItemModel.RESULT_SET_COLUMN_PROP));					
+							.getReportDesign().getModule(), IDataItemModel.RESULT_SET_COLUMN_PROP));
 				}
 			}
-			
+
 			// fetching all data sets in report
-			
+
 			@SuppressWarnings("unchecked")
 			ArrayList<OdaDataSetHandle> odaDataSetHandles=(ArrayList<OdaDataSetHandle>)report.getDesign()
 					.getReportDesign().getAllDataSets();
-			
+
 			for(OdaDataSetHandle odaDataSetHandle:odaDataSetHandles)
 			{
 				OdaDataSet odaDataSet=(OdaDataSet)odaDataSetHandle.getElement();
@@ -543,17 +513,17 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 				ArrayList<OdaResultSetColumn> odaResultSetColumns=(ArrayList<OdaResultSetColumn>)odaDataSet
 						.getLocalProperty(report.getDesign().getReportDesign().getModule(), "resultSet");
 				for(OdaResultSetColumn odaResultSetColumn:odaResultSetColumns)
-				{					
-					resultSetMetaDatacolumnsWithDataType.put(odaResultSetColumn.getColumnName(), 
+				{
+					resultSetMetaDatacolumnsWithDataType.put(odaResultSetColumn.getColumnName(),
 							odaResultSetColumn.getDataType());
 				}
 			}
-			
+
 			// printing the datatype in the same order as column appearing in the report
 			for(int i=0;i<columnNamesInTableOrder.size();i++)
 			{
 				String dataType=resultSetMetaDatacolumnsWithDataType.get(columnNamesInTableOrder.get(i));
-				
+
 				if(dataType != null)
 					writer.text(dataType, delimiter, replaceDelimiterInsideTextWith, isQuoteWrappingEnabled, isFixedWidthReport);
 
@@ -565,5 +535,5 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
 		}
 	}
-	
+
 }
