@@ -323,7 +323,7 @@ public class CSVReportEmitter extends ContentEmitterAdapter
 
 		logger.log( Level.FINE,"Start data" );
 		Object dataValue = data.getValue( );
-		String textValue = dataValue == null ? "" : dataValue.toString();
+		String textValue = CSVDateFormatter.format(dataValue, data.getStyle());
 
         debug("start data - Value: '" + textValue + "', writeData: " + writeData + ", currentColumn: " + currentColumn + ", nestingLevel: " + tableNestingLevel);
 
