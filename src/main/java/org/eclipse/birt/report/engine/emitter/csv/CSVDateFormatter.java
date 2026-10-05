@@ -10,30 +10,40 @@ import java.util.Locale;
 
 final class CSVDateFormatter {
 
+    private static final long ONE_DAY_MILLIS = 24 * 60 * 60 * 1000L;
+
     private CSVDateFormatter() {
     }
 
     static String format(Object value, IStyle style) {
-        if (!(value instanceof Date) || style == null) {
+        if (!(value instanceof Date)) {
             return value == null ? "" : value.toString();
         }
 
-        DataFormatValue dataFormat = style.getDataFormat();
-        if (dataFormat == null) {
-            return value.toString();
+        Date date = (Date) value;
+        DataFormatValue dataFormat = style == null ? null : style.getDataFormat();
+        if (dataFormat != null && dataFormat.getNumberPattern() != null) {
+            return date.toString();
         }
 
-        String pattern = dataFormat.getDateTimePattern();
-        String locale = dataFormat.getDateTimeLocale();
-        if (pattern == null) {
-            pattern = dataFormat.getTimePattern();
-            locale = dataFormat.getTimeLocale();
+        String pattern = null;
+        String locale = null;
+        if (dataFormat != null) {
+            pattern = dataFormat.getDateTimePattern();
+            locale = dataFormat.getDateTimeLocale();
+            if (pattern == null) {
+                pattern = dataFormat.getTimePattern();
+                locale = dataFormat.getTimeLocale();
+            }
+            if (pattern == null) {
+                pattern = dataFormat.getDatePattern();
+                locale = dataFormat.getDateLocale();
+            }
         }
         if (pattern == null) {
-            pattern = dataFormat.getDatePattern();
-            locale = dataFormat.getDateLocale();
+            pattern = applyDefaultPatternIfNeeded(date);
         }
-        return format((Date) value, pattern, parseLocale(locale));
+        return format(date, pattern, parseLocale(locale));
     }
 
     static String format(Date value, String pattern, String locale) {
@@ -129,6 +139,17 @@ final class CSVDateFormatter {
             default:
                 return "MMM d, yyyy h:mm:ss a";
         }
+    }
+    
+    private static String applyDefaultPatternIfNeeded(Date value) {
+        long localTime = value.getTime() - value.getTimezoneOffset() * 60000L;
+        if (localTime % ONE_DAY_MILLIS == 0) {
+            return "Short Date";
+        }
+        if (localTime < ONE_DAY_MILLIS) {
+            return "Short Time";
+        }
+        return "General Date";
     }
 
     private static Locale parseLocale(String locale) {
