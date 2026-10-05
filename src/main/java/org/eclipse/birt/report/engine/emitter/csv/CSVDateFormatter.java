@@ -2,7 +2,6 @@ package org.eclipse.birt.report.engine.emitter.csv;
 
 import org.eclipse.birt.report.engine.content.IStyle;
 import org.eclipse.birt.report.engine.css.engine.value.DataFormatValue;
-import org.eclipse.birt.report.model.api.elements.structures.DateFormatValue;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,7 +24,16 @@ final class CSVDateFormatter {
         }
 
         String pattern = dataFormat.getDateTimePattern();
-        return format((Date) value, pattern, parseLocale(dataFormat.getDateTimeLocale()));
+        String locale = dataFormat.getDateTimeLocale();
+        if (pattern == null) {
+            pattern = dataFormat.getTimePattern();
+            locale = dataFormat.getTimeLocale();
+        }
+        if (pattern == null) {
+            pattern = dataFormat.getDatePattern();
+            locale = dataFormat.getDateLocale();
+        }
+        return format((Date) value, pattern, parseLocale(locale));
     }
 
     static String format(Date value, String pattern, String locale) {
