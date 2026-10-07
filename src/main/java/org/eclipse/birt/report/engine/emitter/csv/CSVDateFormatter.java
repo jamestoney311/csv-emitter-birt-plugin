@@ -53,6 +53,10 @@ final class CSVDateFormatter {
         if (pattern == null || pattern.isEmpty()) {
             return value.toString();
         }
+        pattern = removeTimeZonePatternTokens(pattern);
+        if (pattern.isEmpty()) {
+            return value.toString();
+        }
 
         System.out.println("[CSVDateFormatter] Pattern: " + pattern);
         System.out.println("[CSVDateFormatter] Locale: " + effectiveLocale);
@@ -147,6 +151,34 @@ final class CSVDateFormatter {
             return "Short Time";
         }
         return "General Date";
+    }
+
+    private static String removeTimeZonePatternTokens(String pattern) {
+        StringBuilder result = new StringBuilder(pattern.length());
+        boolean quoted = false;
+
+        for (int i = 0; i < pattern.length(); i++) {
+            char current = pattern.charAt(i);
+            if (current == '\'') {
+                result.append(current);
+                if (i + 1 < pattern.length() && pattern.charAt(i + 1) == '\'') {
+                    result.append(pattern.charAt(++i));
+                } else {
+                    quoted = !quoted;
+                }
+            } else if (!quoted && (current == 'z' || current == 'Z')) {
+                while (!result.isEmpty() && Character.isWhitespace(result.charAt(result.length() - 1))) {
+                    result.setLength(result.length() - 1);
+                }
+                while (i + 1 < pattern.length() && pattern.charAt(i + 1) == current) {
+                    i++;
+                }
+            } else {
+                result.append(current);
+            }
+        }
+
+        return result.toString().trim();
     }
 
     private static Locale parseLocale(String locale) {
