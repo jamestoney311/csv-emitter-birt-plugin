@@ -22,9 +22,6 @@ final class CSVDateFormatter {
 
         Date date = (Date) value;
         DataFormatValue dataFormat = style == null ? null : style.getDataFormat();
-        if (dataFormat != null && dataFormat.getNumberPattern() != null) {
-            return date.toString();
-        }
 
         String pattern = null;
         String locale = null;
