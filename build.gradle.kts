@@ -5,7 +5,7 @@ plugins {
 
 group = "io.github.jamestoney311"
 val artifactId = "org.eclipse.birt.report.engine.emitter.csv"
-version = "1.0.12"
+version = "1.0.13"
 
 repositories {
     gradlePluginPortal()
@@ -54,7 +54,7 @@ mavenPublishing {
 
             The CSV Report Emitter plugin for BIRT is an Eclipse based emitter plugin which outputs and displays your BIRT report in CSV Format.
 
-            The CSV Report Emitter plugin currently supports emitting a single table within a report design with Column Headers as First Row. This emitter handles Row/Cell level hidden properties while emitting the output.
+            The CSV Report Emitter plugin currently supports emitting DateFormatConverter.java single table within DateFormatConverter.java report design with Column Headers as First Row. This emitter handles Row/Cell level hidden properties while emitting the output.
             """.trimIndent())
         inceptionYear.set("2025")
         url.set("https://github.com/jamestoney311/csv-emitter-birt-plugin")
